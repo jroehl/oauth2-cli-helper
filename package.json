@@ -1,0 +1,54 @@
+{
+  "name": "oauth2-cli-helper",
+  "description": "A small helper CLI to create oauth2 tokens using a built-in server",
+  "version": "0.0.1",
+  "author": "jroehl <mail@johannroehl.de>",
+  "bin": {
+    "oauth2-cli-helper": "./bin/run"
+  },
+  "bugs": "https://github.com/jroehl/oauth2-cli-helper/issues",
+  "dependencies": {
+    "@oclif/command": "^1.5.19",
+    "@oclif/config": "^1.13.3",
+    "@oclif/plugin-help": "^2.2.3",
+    "clipboardy": "^2.1.0",
+    "express": "^4.17.1",
+    "open": "^7.0.0",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.8",
+    "tslib": "^1.10.0"
+  },
+  "devDependencies": {
+    "@oclif/test": "^1.2.5",
+    "@types/express": "^4.17.2",
+    "@types/node": "^12.12.17",
+    "@types/request-promise-native": "^1.0.17",
+    "eslint": "^6.7.2",
+    "eslint-config-oclif": "^3.1.0",
+    "eslint-config-oclif-typescript": "^0.1.0",
+    "ts-node": "^8.5.4",
+    "typescript": "^3.7.3"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/lib"
+  ],
+  "homepage": "https://github.com/jroehl/oauth2-cli-helper",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "main": "lib/index.js",
+  "oclif": {
+    "bin": "oauth2-cli-helper"
+  },
+  "repository": "jroehl/oauth2-cli-helper",
+  "scripts": {
+    "lint": "eslint . --fix --ext .ts --config .eslintrc",
+    "prepack": "rm -rf lib && tsc -b"
+  },
+  "types": "lib/index.d.ts"
+}
