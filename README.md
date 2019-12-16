@@ -1,7 +1,5 @@
 # oauth2-cli-helper
 
-===============
-
 A small helper CLI to create oauth2 tokens programmatically
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
@@ -18,7 +16,7 @@ You need to have an app set up with the redirect (callback) URL pointing to
 
 ## Usage
 
-> Example for Linkedin
+### Example for Linkedin
 
 ```bash
 $ oauth2-cli-helper --client_id=<client_id> \
@@ -28,7 +26,7 @@ $ oauth2-cli-helper --client_id=<client_id> \
     --scope=r_liteprofile --scope=r_emailaddress --scope=w_member_social
 ```
 
-> Example for Withings
+### Example for Withings
 
 ```bash
 $ oauth2-cli-helper --client_id=<client_id> \
