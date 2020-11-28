@@ -71,6 +71,9 @@ const getRequestOptions = (
 
   if (token_in_body) {
     options.body = qs.stringify(params)
+    options.headers = {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
   } else {
     options.qs = params
   }
