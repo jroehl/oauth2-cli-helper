@@ -64,7 +64,7 @@ class Oauth2CLIHelper extends Command {
       default: defaults.timeout,
     }),
     token_in_body: flags.boolean({
-      char: 'p',
+      char: 'b',
       description: 'if the params should be send in body in token request',
       default: false,
     }),
@@ -77,6 +77,11 @@ class Oauth2CLIHelper extends Command {
       char: 't',
       description: 'the uri used to request a token',
       required: true,
+    }),
+    pkce: flags.boolean({
+      char: 'p',
+      description: 'use PKCE',
+      default: false,
     }),
 
     verbose: flags.boolean({char: 'v'}),
@@ -94,6 +99,7 @@ class Oauth2CLIHelper extends Command {
       authorization_uri,
       delimiter,
       timeout,
+      pkce,
     } = flags
 
     const server = initServer(
@@ -128,6 +134,12 @@ class Oauth2CLIHelper extends Command {
       response_type: 'code',
       scope: scope.join(delimiter),
       state: state,
+      ...(pkce ?
+        {
+          code_challenge: 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM',
+          code_challenge_method: 'S256',
+        } :
+        {}),
     })
     const url = `${authorization_uri}?${params}`
     log(`Open auth url "${url}"`)

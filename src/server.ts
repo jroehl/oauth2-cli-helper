@@ -54,6 +54,7 @@ const getRequestOptions = (
     grant_type,
     token_method,
     token_in_body,
+    pkce,
   } = flags
 
   const params = {
@@ -62,6 +63,12 @@ const getRequestOptions = (
     client_secret,
     redirect_uri,
     ...query,
+    ...(pkce ?
+      {
+        code_challenge: 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM',
+        code_challenge_method: 'S256',
+      } :
+      {}),
   }
 
   const options: rp.RequestPromiseOptions = {
@@ -72,7 +79,7 @@ const getRequestOptions = (
   if (token_in_body) {
     options.body = qs.stringify(params)
     options.headers = {
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded',
     }
   } else {
     options.qs = params

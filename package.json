@@ -1,7 +1,7 @@
 {
   "name": "@jmnribeiro/oauth2-cli-helper",
   "description": "A small helper CLI to create oauth2 tokens using a built-in server",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "jroehl <mail@johannroehl.de>",
   "bin": {
     "oauth2-cli-helper": "./bin/run"
