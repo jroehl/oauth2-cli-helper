@@ -4,8 +4,9 @@ import * as qs from 'querystring'
 import * as open from 'open'
 
 import {defaults} from './config'
-import {logger} from './utils'
+import {base64URLEncode, logger, sha256} from './utils'
 import initServer from './server'
+import {randomBytes} from 'crypto'
 
 class Oauth2CLIHelper extends Command {
   static description =
@@ -64,7 +65,7 @@ class Oauth2CLIHelper extends Command {
       default: defaults.timeout,
     }),
     token_in_body: flags.boolean({
-      char: 'p',
+      char: 'b',
       description: 'if the params should be send in body in token request',
       default: false,
     }),
@@ -77,6 +78,11 @@ class Oauth2CLIHelper extends Command {
       char: 't',
       description: 'the uri used to request a token',
       required: true,
+    }),
+    pkce: flags.boolean({
+      char: 'p',
+      description: 'use PKCE',
+      default: false,
     }),
 
     verbose: flags.boolean({char: 'v'}),
@@ -94,7 +100,13 @@ class Oauth2CLIHelper extends Command {
       authorization_uri,
       delimiter,
       timeout,
+      pkce,
     } = flags
+
+    let pkce_verifier: string | undefined
+    if (pkce) {
+      pkce_verifier = base64URLEncode(randomBytes(32))
+    }
 
     const server = initServer(
       log,
@@ -106,6 +118,7 @@ class Oauth2CLIHelper extends Command {
 
     server(
       flags,
+      pkce_verifier,
       res => {
         this.log('')
         this.log('Token request response')
@@ -128,6 +141,12 @@ class Oauth2CLIHelper extends Command {
       response_type: 'code',
       scope: scope.join(delimiter),
       state: state,
+      ...(pkce_verifier ?
+        {
+          code_challenge: base64URLEncode(sha256(pkce_verifier)),
+          code_challenge_method: 'S256',
+        } :
+        {}),
     })
     const url = `${authorization_uri}?${params}`
     log(`Open auth url "${url}"`)

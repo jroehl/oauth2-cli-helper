@@ -4,7 +4,7 @@ import * as qs from 'querystring'
 import * as rp from 'request-promise-native'
 
 import {Oauth2CLIHelperFlags} from './config'
-import {parseSeconds, LogFunction} from './utils'
+import {parseSeconds, LogFunction, base64URLEncode, sha256} from './utils'
 
 declare type AuthResponse = {
   access_token: string;
@@ -46,6 +46,7 @@ const renderHTML = (auth: AuthResponse): string => {
 const getRequestOptions = (
   flags: Oauth2CLIHelperFlags,
   query: any,
+  pkce_verifier?: string,
 ): rp.RequestPromiseOptions => {
   const {
     redirect_uri,
@@ -62,6 +63,11 @@ const getRequestOptions = (
     client_secret,
     redirect_uri,
     ...query,
+    ...(pkce_verifier ?
+      {
+        code_verifier: pkce_verifier,
+      } :
+      {}),
   }
 
   const options: rp.RequestPromiseOptions = {
@@ -72,7 +78,7 @@ const getRequestOptions = (
   if (token_in_body) {
     options.body = qs.stringify(params)
     options.headers = {
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded',
     }
   } else {
     options.qs = params
@@ -82,6 +88,7 @@ const getRequestOptions = (
 
 export default (log: LogFunction, timeout: NodeJS.Timeout) => (
   flags: Oauth2CLIHelperFlags,
+  pkce_verifier: string | undefined,
   resolve: (auth: AuthResponse) => void,
   reject: (err: Error) => void,
 ) => {
@@ -99,7 +106,7 @@ export default (log: LogFunction, timeout: NodeJS.Timeout) => (
     try {
       log(`Fetching auth url "${token_uri}"`)
 
-      const options = getRequestOptions(flags, req.query)
+      const options = getRequestOptions(flags, req.query, pkce_verifier)
       const auth = JSON.parse(await rp(token_uri, options)) as AuthResponse
 
       auth.parsed_expires_in = parseSeconds(auth.expires_in)

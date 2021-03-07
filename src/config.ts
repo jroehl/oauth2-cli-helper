@@ -12,6 +12,7 @@ export declare type Oauth2CLIHelperFlags = {
   token_in_body: boolean;
   token_method: string;
   token_uri: string;
+  pkce: boolean;
   verbose: boolean;
   version: void;
 };

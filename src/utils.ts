@@ -1,3 +1,5 @@
+import { createHash } from "crypto"
+
 /**
  * Parse seconds to days, hours, minutes, seconds string
  * @param {(string | number)} seconds the time in seconds
@@ -24,3 +26,15 @@ export declare type LogFunction = (...args: any[]) => void;
  */
 export const logger = (verbose: boolean): LogFunction => (...args: any[]) =>
   verbose && console.log(...args)
+
+export const base64URLEncode = (buffer: Buffer) => {
+  return buffer.toString('base64')
+  .replace(/\+/g, '-')
+  .replace(/\//g, '_')
+  // eslint-disable-next-line no-div-regex
+  .replace(/=/g, '')
+}
+
+export const sha256 = (str: string) => {
+  return createHash('sha256').update(str).digest()
+}
